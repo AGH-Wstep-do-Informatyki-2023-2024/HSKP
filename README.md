@@ -2,13 +2,20 @@
 
 ## Opis Projektu
 Projekt HSKP ma na celu stworzenie gry Snake w języku Python z dodatkową funkcją zmiennej prędkości węża.
+
 ### Planowanie Projektu
 1. *Analiza Wymagań:* Sporządź listę funkcjonalności, takich jak sterowanie wężem, zmiana prędkości, interfejs użytkownika.
 2. *Projektowanie Logiki Gry:* Zaprojektuj strukturę węża, mechanikę poruszania się, algorytmy kontroli prędkości.
+
 ### Implementacja
 1. *Tworzenie Podstaw Funkcjonalności:* Rozpocznij od implementacji podstawowej logiki gry, sterowania wężem i jego poruszania się.
 2. *Dodawanie Zmiennej Prędkości:* Zaimplementuj funkcję zmiany prędkości węża w zależności od określonych warunków.
 3. *Testowanie i Poprawki:* Przetestuj różne poziomy prędkości, napraw błędy i zoptymalizuj działanie gry.
+
+### Finalizacja
+1. *Dokumentacja:* Utwórz dokumentację kodu oraz opis gry dla użytkowników.
+2. *Publikacja:* Przygotuj projekt do udostępnienia, dodaj licencję i zaktualizuj plik README.md.
+3. *Ogłoszenie Publiczne:* Udostępnij projekt społeczności, promuj i zachęcaj do udziału w rozwoju gry.
 
 ## Instrukcje
 Aby uruchomić grę na lokalnym komputerze, wykonaj następujące kroki:
