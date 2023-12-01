@@ -20,13 +20,13 @@ Aby uruchomić grę na lokalnym komputerze, wykonaj następujące kroki:
 3. **Graj!** Steruj wężem za pomocą strzałek klawiatury, ciesz się grą z różnymi poziomami prędkości węża.
 
 ## Wymagania
-Do uruchomienia projektu wymagany jest interpreter Pythona. Dodatkowe zależności zostaną uwzględnione w pliku `requirements.txt`.
+Do uruchomienia projektu wymagany jest interpreter Pythona.
 
 ## Autorzy
-- Hubert Iwanowski (@hubertiwan)
-- Jakub Froncz (@JakubFr)
-- Szymon Szostak (@SSzostak23)
-- Piotr Zarzycki (@Piterziz)
+- Hubert Iwanowski @hubertiwan
+- Jakub Froncz @JakubFr
+- Szymon Szostak @SSzostak23
+- Piotr Zarzycki @Piterziz
 
 ## Licencja
 Ten projekt jest objęty licencją [nazwa_licencji]. Zobacz plik LICENSE.md dla szczegółów.
