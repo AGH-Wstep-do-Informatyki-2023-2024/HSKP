@@ -8,7 +8,7 @@ Aby uruchomić grę na lokalnym komputerze, wykonaj następujące kroki:
 
 1. **Klonowanie Repozytorium:** Sklonuj to repozytorium na swój lokalny komputer przy użyciu polecenia:
     ```bash
-    git clone https://github.com/hubertiwan/hskp_project
+    git clone https://github.com/AGH-Wstep-do-Informatyki-2023-2024/HSKP
     ```
     
 2. **Uruchomienie Gry:** Przejdź do katalogu z projektem i uruchom plik `main.py` w interpreterze Pythona:
