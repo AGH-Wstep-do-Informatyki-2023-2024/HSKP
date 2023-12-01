@@ -29,4 +29,4 @@ Do uruchomienia projektu wymagany jest interpreter Pythona.
 - Piotr Zarzycki @Piterziz
 
 ## Licencja
-Ten projekt jest objęty licencją [nazwa_licencji]. Zobacz plik LICENSE.md dla szczegółów.
+Ten projekt jest objęty licencją MIT. Zobacz plik LICENSE.md dla szczegółów.
