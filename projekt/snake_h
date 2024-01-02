@@ -1,0 +1,54 @@
+import pygame, sys, random
+from pygame.math import Vector2 #zamiast pygame.math.Vector2() -> Vector2()
+
+class SNAKE():
+    def __init__(self):
+        self.body = [Vector2(5, 10), Vector2(6, 10), Vector2(7, 10)]
+        
+    def drawSnake(self):
+        for snakePart in self.body:
+            #tworzenie jednej części węża
+            snakeRect = pygame.Rect(int(snakePart.x * cellSize), int(snakePart.y * cellSize), cellSize, cellSize)            
+            #rysowanie pojedynczej cześci węża
+            pygame.draw.rect(gameScreen, (79, 60, 45), snakeRect)
+                       
+class APPLE:
+    def __init__(self):
+        #tworzenie losowych pozycji x i y, żeby owoc nie wychodził poza zakres okna programu
+        self.x = random.randint(0, cellNumber - 1)
+        self.y = random.randint(0, cellNumber - 1)
+        self.position = Vector2(self.x, self.y)
+        
+    def drawFruit(self):        
+        #tworzenie owocu w kształcie kwadratu o szerokości jednego okna siatki w losoych pozycjach na siatce
+        fruitRect = pygame.Rect(int(self.position.x * cellSize), int(self.position.y * cellSize), cellSize, cellSize) #int bo self.position.x będzie typu float
+        #rysowanie owocu
+        pygame.draw.rect(gameScreen, (150, 17, 17), fruitRect)
+
+#inicjalizacja modułów pygame
+pygame.init()
+#tworzenie wirtualnej siatki
+cellSize = 20
+cellNumber = 30
+
+gameScreen = pygame.display.set_mode((cellSize * cellNumber, cellNumber * cellSize))
+gameIcon = pygame.image.load('snake_head.png')
+pygame.display.set_caption('Snake by HSKP')
+pygame.display.set_icon(gameIcon)
+clock = pygame.time.Clock()
+
+fruit1 = APPLE()
+snake = SNAKE()
+
+while True:
+    for event in pygame.event.get():
+       if event.type == pygame.QUIT: #zamykanie okienka gry
+           pygame.quit() 
+           sys.exit()
+           
+    gameScreen.fill((175,215,70)) #kolorowanie tła  
+    fruit1.drawFruit()   
+    snake.drawSnake() 
+        
+    pygame.display.update()
+    clock.tick(60) #predkosc odtwarzania gry - 60fps
