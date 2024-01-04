@@ -1,33 +1,75 @@
 import pygame, sys, random
-from pygame.math import Vector2 #zamiast pygame.math.Vector2() -> Vector2()
+from pygame.math import Vector2  # zamiast pygame.math.Vector2() -> Vector2()
+
 
 class SNAKE():
     def __init__(self):
         self.body = [Vector2(5, 10), Vector2(6, 10), Vector2(7, 10)]
-        
+        self.direction = Vector2(1,0)
+        self.newBlock = False
+
     def drawSnake(self):
         for snakePart in self.body:
-            #tworzenie jednej części węża
-            snakeRect = pygame.Rect(int(snakePart.x * cellSize), int(snakePart.y * cellSize), cellSize, cellSize)            
-            #rysowanie pojedynczej cześci węża
+            # tworzenie jednej części węża
+            snakeRect = pygame.Rect(int(snakePart.x * cellSize), int(snakePart.y * cellSize), cellSize, cellSize)
+            # rysowanie pojedynczej cześci węża
             pygame.draw.rect(gameScreen, (79, 60, 45), snakeRect)
-                       
+
+    def moveSnake(self):
+
+        if self.newBlock == True: # jesli trafiamy na jablko to waz sie wydluza
+            bodyCopy = self.body[:]
+            self.newBlock = False
+        else: # jesli nie trafiamy na jablko to waz nie moze zmienic dlugosci
+            bodyCopy = self.body[:-1]
+
+        bodyCopy.insert(0,bodyCopy[0] + self.direction)
+        # update ciala weza
+        self.body = bodyCopy[:]
+
+    def addBlock(self):
+        self.newBlock = True
+
 class APPLE:
     def __init__(self):
-        #tworzenie losowych pozycji x i y, żeby owoc nie wychodził poza zakres okna programu
+        # tworzenie losowych pozycji x i y, żeby owoc nie wychodził poza zakres okna programu
+        self.randomize()
+
+    def drawFruit(self):
+        # tworzenie owocu w kształcie kwadratu o szerokości jednego okna siatki w losoych pozycjach na siatce
+        fruitRect = pygame.Rect(int(self.position.x * cellSize), int(self.position.y * cellSize), cellSize,
+                                cellSize)  # int bo self.position.x będzie typu float
+        # rysowanie owocu
+        pygame.draw.rect(gameScreen, (150, 17, 17), fruitRect)
+
+    def randomize(self):
         self.x = random.randint(0, cellNumber - 1)
         self.y = random.randint(0, cellNumber - 1)
         self.position = Vector2(self.x, self.y)
-        
-    def drawFruit(self):        
-        #tworzenie owocu w kształcie kwadratu o szerokości jednego okna siatki w losoych pozycjach na siatce
-        fruitRect = pygame.Rect(int(self.position.x * cellSize), int(self.position.y * cellSize), cellSize, cellSize) #int bo self.position.x będzie typu float
-        #rysowanie owocu
-        pygame.draw.rect(gameScreen, (150, 17, 17), fruitRect)
 
-#inicjalizacja modułów pygame
+class MAIN:
+    def __init__(self):
+        self.snake = SNAKE()
+        self.fruit = APPLE()
+
+    def update(self):
+        self.snake.moveSnake()
+        self.snakeEat()
+
+    def drawElements(self):
+        self.fruit.drawFruit()
+        self.snake.drawSnake()
+
+    def snakeEat(self):
+        if self.fruit.position == self.snake.body[0]: # czy glowa weza jest "w" jablku
+            # zmiana miejsca polozenia jablka
+            self.fruit.randomize()
+            # wydluzenie weza
+            self.snake.addBlock()
+
+# inicjalizacja modułów pygame
 pygame.init()
-#tworzenie wirtualnej siatki
+# tworzenie wirtualnej siatki
 cellSize = 20
 cellNumber = 30
 
@@ -37,18 +79,30 @@ pygame.display.set_caption('Snake by HSKP')
 pygame.display.set_icon(gameIcon)
 clock = pygame.time.Clock()
 
-fruit1 = APPLE()
-snake = SNAKE()
+mainGame = MAIN()
+
+screenUpdate = pygame.USEREVENT
+pygame.time.set_timer(screenUpdate,150)
 
 while True:
     for event in pygame.event.get():
-       if event.type == pygame.QUIT: #zamykanie okienka gry
-           pygame.quit() 
-           sys.exit()
-           
-    gameScreen.fill((175,215,70)) #kolorowanie tła  
-    fruit1.drawFruit()   
-    snake.drawSnake() 
-        
+        if event.type == pygame.QUIT:  # zamykanie okienka gry
+            pygame.quit()
+            sys.exit()
+        if event.type == screenUpdate: # update co 150 milisekund
+            mainGame.update()
+        if event.type == pygame.KEYDOWN: # pygame nasluchuje klikniecia klawiatury
+            if event.key == pygame.K_w:
+                mainGame.snake.direction = Vector2(0,-1)
+            if event.key == pygame.K_s:
+                mainGame.snake.direction = Vector2(0, 1)
+            if event.key == pygame.K_d:
+                mainGame.snake.direction = Vector2(1, 0)
+            if event.key == pygame.K_a:
+                mainGame.snake.direction = Vector2(-1, 0)
+    gameScreen.fill((175, 215, 70))  # kolorowanie tła
+
+    mainGame.drawElements()
+
     pygame.display.update()
-    clock.tick(60) #predkosc odtwarzania gry - 60fps
+    clock.tick(60)  # predkosc odtwarzania gry - 60fps
