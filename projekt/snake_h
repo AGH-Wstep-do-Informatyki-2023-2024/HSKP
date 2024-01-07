@@ -7,6 +7,7 @@ class SNAKE():
         self.body = [Vector2(5, 10), Vector2(4, 10), Vector2(3, 10)]
         self.direction = Vector2(1,0)
         self.newBlock = False
+        self.score = 0  # Dodana zmienna do śledzenia zjedzonych jabłek
 
     def drawSnake(self):
         for snakePart in self.body:
@@ -29,6 +30,7 @@ class SNAKE():
 
     def addBlock(self):
         self.newBlock = True
+        self.score += 1  # Zwiększenie liczby zjedzonych jabłek
 
 class APPLE:
     def __init__(self):
@@ -75,6 +77,18 @@ class MAIN:
         for snakePart in self.snake.body[1:]:
             if snakePart == self.snake.body[0]:
                 self.gameOver()
+
+    def displayScore(self):
+        font = pygame.font.Font('projekt/Happiness Mood Demo.ttf', 30)
+        text = font.render(f"Score: {self.snake.score}", True, (255, 255, 255))
+        gameScreen.blit(text, (10, 10))
+
+    def displayResult(self):
+        font = pygame.font.Font('projekt/Happiness Mood Demo.ttf', 50)
+        text = font.render(f"Game Over. Score: {self.snake.score}", True, (255, 255, 255))
+        gameScreen.blit(text, (100, 200))
+        pygame.display.update()
+        pygame.time.delay(2000)  # Opóźnienie przed zamknięciem gry
     
     def gameOver(self):
         pygame.quit()
@@ -121,6 +135,7 @@ while True:
     gameScreen.fill((175, 215, 70))  # kolorowanie tła
 
     mainGame.drawElements()
+    mainGame.displayScore()
 
     pygame.display.update()
     clock.tick(60)  # predkosc odtwarzania gry - 60fps
