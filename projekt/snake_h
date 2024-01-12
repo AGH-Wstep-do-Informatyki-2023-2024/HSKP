@@ -109,6 +109,7 @@ clock = pygame.time.Clock()
 
 mainGame = MAIN()
 print("to moze wywolac konflikt")
+print("")
 screenUpdate = pygame.USEREVENT
 pygame.time.set_timer(screenUpdate,150)
 
