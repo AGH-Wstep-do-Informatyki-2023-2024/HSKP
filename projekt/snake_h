@@ -115,6 +115,9 @@ print("to wywyoła konflikt")
 
 print("to moze wywolac konflikt")
 
+print("Konflikt zajdzie tutaj")
+
+
 
 screenUpdate = pygame.USEREVENT
 pygame.time.set_timer(screenUpdate,150)
