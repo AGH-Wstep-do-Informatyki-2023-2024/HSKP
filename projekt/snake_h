@@ -107,7 +107,7 @@ pygame.display.set_icon(gameIcon)
 clock = pygame.time.Clock()
 
 mainGame = MAIN()
-print("to moze wywołać konflikt podejście 2)"
+
 screenUpdate = pygame.USEREVENT
 pygame.time.set_timer(screenUpdate,150)
 
