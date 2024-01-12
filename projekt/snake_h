@@ -108,10 +108,6 @@ clock = pygame.time.Clock()
 
 mainGame = MAIN()
 
-print("to wywyoła konflikt")
-
-print("to moze wywolac konflikt")
-
 screenUpdate = pygame.USEREVENT
 pygame.time.set_timer(screenUpdate,150)
 
@@ -141,4 +137,4 @@ while True:
     mainGame.displayScore()
 
     pygame.display.update()
-    clock.tick(60)  # predkosc odtwarzania gry - 60fps
+    clock.tick(60)  # predkosc odtwarzania gry - 60fps a
