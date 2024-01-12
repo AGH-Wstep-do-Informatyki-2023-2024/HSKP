@@ -107,7 +107,11 @@ pygame.display.set_icon(gameIcon)
 clock = pygame.time.Clock()
 
 mainGame = MAIN()
+
 print("to wywyoła konflikt")
+
+print("to moze wywolac konflikt")
+
 screenUpdate = pygame.USEREVENT
 pygame.time.set_timer(screenUpdate,150)
 
