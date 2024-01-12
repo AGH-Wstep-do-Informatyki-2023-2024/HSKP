@@ -101,8 +101,6 @@ pygame.init()
 cellSize = 20
 cellNumber = 30
 
-print(f'Plansza ma wymiary ${cellSize} x ${cellSize}')
-
 gameScreen = pygame.display.set_mode((cellSize * cellNumber, cellNumber * cellSize))
 gameIcon = pygame.image.load('snake_head.png')
 pygame.display.set_caption('Snake by HSKP')
@@ -111,6 +109,10 @@ clock = pygame.time.Clock()
 
 mainGame = MAIN()
 print("to moze wywolac konflikt")
+print("Konflikt zajdzie tutaj")
+
+
+
 screenUpdate = pygame.USEREVENT
 pygame.time.set_timer(screenUpdate,150)
 
