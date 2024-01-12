@@ -49,8 +49,6 @@ class APPLE:
         self.y = random.randint(0, cellNumber - 1)
         self.position = Vector2(self.x, self.y)
 
-print(SNAKE)
-
 class MAIN:
     def __init__(self):
         self.snake = SNAKE()
@@ -111,6 +109,7 @@ clock = pygame.time.Clock()
 
 mainGame = MAIN()
 
+print(SNAKE)
 screenUpdate = pygame.USEREVENT
 pygame.time.set_timer(screenUpdate,150)
 
