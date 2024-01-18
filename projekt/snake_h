@@ -1,140 +1,177 @@
 import pygame, sys, random
-from pygame.math import Vector2  # zamiast pygame.math.Vector2() -> Vector2()
+from pygame.math import Vector2
 
 class SNAKE():
     def __init__(self):
         self.body = [Vector2(5, 10), Vector2(4, 10), Vector2(3, 10)]
-        self.direction = Vector2(1,0)
+        self.direction = Vector2(1, 0)
         self.newBlock = False
-        self.score = 0  # Dodana zmienna do śledzenia zjedzonych jabłek
+        self.score = 0
+        self.level = 1
+        self.clockRate = 10
 
     def drawSnake(self):
         for snakePart in self.body:
-            # tworzenie jednej części węża
             snakeRect = pygame.Rect(int(snakePart.x * cellSize), int(snakePart.y * cellSize), cellSize, cellSize)
-            # rysowanie pojedynczej cześci węża
             pygame.draw.rect(gameScreen, (79, 60, 45), snakeRect)
 
     def moveSnake(self):
-
-        if self.newBlock == True: # jesli trafiamy na jablko to waz sie wydluza
+        if self.newBlock:
             bodyCopy = self.body[:]
             self.newBlock = False
-        else: # jesli nie trafiamy na jablko to waz nie moze zmienic dlugosci
+        else:
             bodyCopy = self.body[:-1]
 
-        bodyCopy.insert(0,bodyCopy[0] + self.direction)
-        # update ciala weza
+        bodyCopy.insert(0, bodyCopy[0] + self.direction)
         self.body = bodyCopy[:]
 
     def addBlock(self):
         self.newBlock = True
-        self.score += 1  # Zwiększenie liczby zjedzonych jabłek
+        self.score += 1
 
 class APPLE:
     def __init__(self):
-        # tworzenie losowych pozycji x i y, żeby owoc nie wychodził poza zakres okna programu
         self.randomize()
 
     def drawFruit(self):
-        # tworzenie owocu w kształcie kwadratu o szerokości jednego okna siatki w losoych pozycjach na siatce
-        fruitRect = pygame.Rect(int(self.position.x * cellSize), int(self.position.y * cellSize), cellSize,
-                                cellSize)  # int bo self.position.x będzie typu float
-        # rysowanie owocu
+        fruitRect = pygame.Rect(int(self.position.x * cellSize), int(self.position.y * cellSize), cellSize, cellSize)
         pygame.draw.rect(gameScreen, (150, 17, 17), fruitRect)
 
     def randomize(self):
-        self.x = random.randint(0, cellNumber - 1)
-        self.y = random.randint(0, cellNumber - 1)
+        # Exclude the edges of the screen
+        self.x = random.randint(1, cellNumber - 2)
+        self.y = random.randint(1, cellNumber - 2)
         self.position = Vector2(self.x, self.y)
 
 class MAIN:
     def __init__(self):
         self.snake = SNAKE()
         self.fruit = APPLE()
+        self.state = "MENU"
 
     def update(self):
+        if self.state == "MENU":
+            self.menu()
+        elif self.state == "PLAY":
+            self.play()
+        elif self.state == "GAME_OVER":
+            self.gameOver()
+
+    def menu(self):
+        font = pygame.font.Font('projekt/Happiness Mood Demo.ttf', 50)
+        text1 = font.render("1. Start Game", True, (255, 255, 255))
+        text2 = font.render("2. Quit", True, (255, 255, 255))
+        gameScreen.blit(text1, (50, 100))
+        gameScreen.blit(text2, (50, 200))
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    self.state = "PLAY"
+                elif event.key == pygame.K_2:
+                    pygame.quit()
+                    sys.exit()
+
+    def play(self):
         self.snake.moveSnake()
         self.snakeEat()
         self.checkGameOver()
+
+        gameScreen.fill((175, 215, 70))
+        self.drawElements()
+        self.displayScore()
+        self.displayLevel()
+        pygame.display.update()
+        clock.tick(self.snake.clockRate)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    if self.snake.direction.y != 1:
+                        self.snake.direction = Vector2(0, -1)
+                elif event.key == pygame.K_s:
+                    if self.snake.direction.y != -1:
+                        self.snake.direction = Vector2(0, 1)
+                elif event.key == pygame.K_d:
+                    if self.snake.direction.x != -1:
+                        self.snake.direction = Vector2(1, 0)
+                elif event.key == pygame.K_a:
+                    if self.snake.direction.x != 1:
+                        self.snake.direction = Vector2(-1, 0)
+
+    def gameOver(self):
+        font = pygame.font.Font('projekt/Happiness Mood Demo.ttf', 40)
+        text1 = font.render(f"Game Over. Total Score: {self.snake.score + 5 * self.snake.level -5}", True, (255, 255, 255))
+        text2 = font.render("1. Play Again", True, (255, 255, 255))
+        text3 = font.render("2. Quit", True, (255, 255, 255))
+        gameScreen.blit(text1, (100, 100))
+        gameScreen.blit(text2, (100, 200))
+        gameScreen.blit(text3, (100, 300))
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    self.state = "PLAY"
+                    self.snake = SNAKE()
+                elif event.key == pygame.K_2:
+                    pygame.quit()
+                    sys.exit()
 
     def drawElements(self):
         self.fruit.drawFruit()
         self.snake.drawSnake()
 
     def snakeEat(self):
-        if self.fruit.position == self.snake.body[0]: # czy glowa weza jest "w" jablku
-            # zmiana miejsca polozenia jablka
+        if self.fruit.position == self.snake.body[0]:
             self.fruit.randomize()
-            # wydluzenie weza
             self.snake.addBlock()
+            if self.snake.score % 5 == 0:  # Check if the score is a multiple of 5
+                self.snake.level += 1
+                self.snake.score = 0
+                self.snake.body = [Vector2(5, 10), Vector2(4, 10), Vector2(3, 10)]
+                self.snake.direction = Vector2(1, 0)
+                self.snake.clockRate += 5
 
     def checkGameOver(self):
-        # Sprawdzamy czy snake uderza w sciane lub siebie
-        if not 0 <= self.snake.body[0].x < cellNumber or not 0 <= self.snake.body[0].y < cellNumber :
-            self.gameOver()
+        if not 0 <= self.snake.body[0].x < cellNumber or not 0 <= self.snake.body[0].y < cellNumber:
+            self.state = "GAME_OVER"
         for snakePart in self.snake.body[1:]:
             if snakePart == self.snake.body[0]:
-                self.gameOver()
+                self.state = "GAME_OVER"
 
     def displayScore(self):
         font = pygame.font.Font('projekt/Happiness Mood Demo.ttf', 30)
         text = font.render(f"Score: {self.snake.score}", True, (255, 255, 255))
         gameScreen.blit(text, (10, 10))
 
-    def displayResult(self):
-        font = pygame.font.Font('projekt/Happiness Mood Demo.ttf', 50)
-        text = font.render(f"Game Over. Score: {self.snake.score}", True, (255, 255, 255))
-        gameScreen.blit(text, (100, 200))
-        pygame.display.update()
-        pygame.time.delay(2000)  # Opóźnienie przed zamknięciem gry
-    
-    def gameOver(self):
-        pygame.quit()
-        sys.exit()
+    def displayLevel(self):
+        font = pygame.font.Font('projekt/Happiness Mood Demo.ttf', 30)
+        text = font.render(f"Level: {self.snake.level}", True, (255, 255, 255))
+        gameScreen.blit(text, (150, 10))
 
 
-# inicjalizacja modułów pygame
+# Initialize pygame modules
 pygame.init()
-# tworzenie wirtualnej siatki
+
+# Create the game window
 cellSize = 20
 cellNumber = 30
-
 gameScreen = pygame.display.set_mode((cellSize * cellNumber, cellNumber * cellSize))
 gameIcon = pygame.image.load('snake_head.png')
 pygame.display.set_caption('Snake by HSKP')
 pygame.display.set_icon(gameIcon)
 clock = pygame.time.Clock()
 
+# Initialize game objects and variables
 mainGame = MAIN()
-
 screenUpdate = pygame.USEREVENT
-pygame.time.set_timer(screenUpdate,150)
+pygame.time.set_timer(screenUpdate, 150)
 
+# Main game loop
 while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:  # zamykanie okienka gry
-            pygame.quit()
-            sys.exit()
-        if event.type == screenUpdate: # update co 150 milisekund
-            mainGame.update()
-        if event.type == pygame.KEYDOWN: # pygame nasluchuje klikniecia klawiatury
-            if event.key == pygame.K_w:
-                if mainGame.snake.direction.y != 1:
-                    mainGame.snake.direction = Vector2(0,-1)
-            if event.key == pygame.K_s:
-                if mainGame.snake.direction.y != -1:
-                    mainGame.snake.direction = Vector2(0, 1)
-            if event.key == pygame.K_d:
-                if mainGame.snake.direction.x != -1:
-                    mainGame.snake.direction = Vector2(1, 0)
-            if event.key == pygame.K_a:
-                if mainGame.snake.direction.x != 1:
-                    mainGame.snake.direction = Vector2(-1, 0)
-    gameScreen.fill((175, 215, 70))  # kolorowanie tła
-
-    mainGame.drawElements()
-    mainGame.displayScore()
-
-    pygame.display.update()
-    clock.tick(60)  # predkosc odtwarzania gry - 60fps a
+    mainGame.update()
