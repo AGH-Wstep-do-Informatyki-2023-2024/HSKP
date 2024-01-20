@@ -111,8 +111,8 @@ class FRUIT:
         gameScreen.blit(honey, fruitRect)
 
     def randomize(self):
-        self.x = random.randint(0, cellNumber - 1)
-        self.y = random.randint(0, cellNumber - 1)
+        self.x = random.randint(1, cellNumber - 2)
+        self.y = random.randint(1, cellNumber - 2)
         self.position = Vector2(self.x, self.y)
 
 class MAIN:
